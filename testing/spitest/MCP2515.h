@@ -1,6 +1,8 @@
 #ifndef MCP2515_H
 #define MCP2515_H
 
+#define DEBUG
+
 #include <SPI.h>
 
 const int SPI_SS = 10;
@@ -17,7 +19,7 @@ typedef enum {
 } MCP_SPI_CMD;
 
 //sends a single byte to MCP2515 via SPI
-bool SPI_write(uint8_t cmd)
+bool SPI_send(uint8_t cmd)
 {
   //slave select low
   digitalWrite(SPI_SS, LOW);
@@ -29,6 +31,43 @@ bool SPI_write(uint8_t cmd)
   digitalWrite(SPI_SS, HIGH);
 }
 
+//writes a byte to a specified register
+bool MCP2515_write(uint8_t reg, uint8_t data)
+{
+  //slave select low
+  digitalWrite(SPI_SS, LOW);
+  delay(1);
+  //transfer command
+  SPI.transfer(WRITE);
+  //transfer register
+  SPI.transfer(reg);
+  //transfer data
+  SPI.transfer(data);
+  delay(1);
+  //slave select high
+  digitalWrite(SPI_SS, HIGH);
+}
+
+//reads a byte from a specified register
+uint8_t MCP2515_read(uint8_t reg)
+{
+  //slave select low
+  digitalWrite(SPI_SS, LOW);
+  delay(1);
+  //transfer command
+  SPI.transfer(READ);
+  //transfer register
+  SPI.transfer(reg);
+  //transfer data
+  uint8_t data = SPI.transfer(0xAA);
+  Serial.println(data,HEX);
+  delay(1);
+  //slave select high
+  digitalWrite(SPI_SS, HIGH);
+
+  return data;
+}
+
 //initializes SPI to communicate with MCP2515
 void MCP2515_init() {
   pinMode(SPI_SS, OUTPUT);
@@ -38,7 +77,7 @@ void MCP2515_init() {
 
 //sens reset signal to mcp2515
 void MCP2515_reset(){
-  SPI_write(RESET);
+  SPI_send(RESET);
 }
 
 #endif
