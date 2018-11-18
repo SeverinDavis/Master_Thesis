@@ -4,10 +4,13 @@
 #define DEBUG
 
 #include <SPI.h>
+#include "CAN.h"
 
 const int SPI_SS = 10;
 const int SPI_CLK = 13;
 const int SPI_MISO = 12;
+
+
 
 typedef enum {
   RESET       = 0b11000000, 
@@ -59,8 +62,7 @@ uint8_t MCP2515_read(uint8_t reg)
   //transfer register
   SPI.transfer(reg);
   //transfer data
-  uint8_t data = SPI.transfer(0xAA);
-  Serial.println(data,HEX);
+  uint8_t data = SPI.transfer(0x00);
   delay(1);
   //slave select high
   digitalWrite(SPI_SS, HIGH);
