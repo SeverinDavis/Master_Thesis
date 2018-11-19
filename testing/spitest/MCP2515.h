@@ -51,6 +51,24 @@ bool MCP2515_write(uint8_t reg, uint8_t data)
   digitalWrite(SPI_SS, HIGH);
 }
 
+//writes a byte to a specified starting register and keeps writing into following registers
+bool MCP2515_write_batch(uint8_t reg, uint8_t* data, uint8_t data_length)
+{
+  //slave select low
+  digitalWrite(SPI_SS, LOW);
+  delay(1);
+  //transfer command
+  SPI.transfer(WRITE);
+  //transfer register
+  SPI.transfer(reg);
+  //transfer data
+  for(int i = 0; i < data_length; i++)
+    SPI.transfer(data[i]);
+  delay(1);
+  //slave select high
+  digitalWrite(SPI_SS, HIGH);
+}
+
 //reads a byte from a specified register
 uint8_t MCP2515_read(uint8_t reg)
 {
@@ -86,8 +104,7 @@ void MCP2515_load(can_message p_message) {
   uint8_t data_length = p_message.data_length & 0x0F;
   MCP2515_write(0x35, data_length);
 
-  for(uint8_t i = 0; i < data_length; i++)
-      MCP2515_write(0x36+i, p_message.data[i]);
+  MCP2515_write_batch(0x36, p_message.data, p_message.data_length);
 
 
 }

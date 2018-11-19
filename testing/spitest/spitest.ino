@@ -26,10 +26,10 @@ void loop() {
        data[1] = 2;
        data[2] = 3;
        data[3] = 7;
-       data[4] = 1;
-       data[5] = 2;
-       data[6] = 3;
-       data[7] = 7;
+       data[4] = 9;
+       data[5] = 8;
+       data[6] = 7;
+       data[7] = 6;
        
        can_message message = can_message_create(7, data, 8);
        Serial.println("loading");
