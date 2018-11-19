@@ -2,12 +2,12 @@
 #define CAN_H
 
 typedef struct {
-  uint8_t identifier;
+  uint16_t identifier;
   uint8_t data[8];
   uint8_t data_length;
 } can_message;
 
-can_message can_message_create(uint8_t p_identifier, uint8_t* p_data, uint8_t p_data_length) {
+can_message can_message_create(uint16_t p_identifier, uint8_t* p_data, uint8_t p_data_length) {
   can_message message;
   message.identifier = p_identifier;
   message.data_length = p_data_length;
@@ -27,7 +27,7 @@ void can_message_set_data(uint8_t *p_data, uint8_t p_data_length, can_message* p
     p_message->data[i] = p_data[i];
 }
 
-void can_message_set_identifier(uint8_t p_identifier, can_message* p_message) {
+void can_message_set_identifier(uint16_t p_identifier, can_message* p_message) {
   p_message->identifier = p_identifier;
 }
 
